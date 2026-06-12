@@ -100,9 +100,8 @@ operators.forEach(button => {
 document.addEventListener("keydown", (event) => {
     const key = String(event.key);
     if (key >= 0 && key <= 9 || key == '.') printDigit(key);
-    if (key == '+' || key == '-' || key == '*' || key == '=') printOperator(key);
+    if (key == '+' || key == '-' || key == '*') printOperator(key);
     if (key == '/') printOperator('\u00F7');
-    if (key == 'Enter') printOperator('=');
+    if (key == 'Enter' || key == '=') printOperator('=');
     if (key == 'Delete' || key == 'Backspace') printOperator('clear');
-     console.log(event)
 })
