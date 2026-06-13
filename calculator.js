@@ -3,12 +3,12 @@ const digits = document.querySelectorAll(".digits button");
 const operators = document.querySelectorAll(".operators button");
 let firstNum = '';
 let secondNum = '';
-let operator = '=';
+let operator = '';
 let result = ''
 
 function printDigit(digit) {
     // assign first number until an operator is assigned
-    if (operator == '=') {
+    if (operator == '') {
         (digit == '.' && firstNum.includes('.')) ? null :
         firstNum += digit
         screen.textContent = firstNum;
@@ -27,17 +27,17 @@ function printOperator(sign) {
         result = '';
         firstNum = '';
         secondNum = '';
-        operator = '=';
+        operator = '';
         screen.textContent = '';
     }
     // if = is clicked, operate and set result. set first and second num to '' and operator to =
-    else if (sign == '=') {
+    else if (sign == '') {
         if (firstNum === '') firstNum = result;
-        if (secondNum === '') result = operate(firstNum, secondNum, "=")
+        if (secondNum === '') result = operate(firstNum, secondNum, "")
         result = operate(firstNum, secondNum, operator);
         firstNum = '';
         secondNum = '';
-        operator = '=';
+        operator = '';
     }
 
     // if a sign is clicked with no second number, set operator variable
@@ -75,11 +75,20 @@ function operate(a, b, sign){
             if (b == 0) {screen.textContent = "I can't believe you've done this"; return '0'}
             else {screen.textContent = Math.floor((+a / +b) * 10000) / 10000;
             return `${Math.floor((+a / +b) * 10000) / 10000}`};
-        case "=":
+        case "":
             screen.textContent = +a;
             return `${+a}`;
         default: screen.textContent = "ERROR"; 
     }
+}
+
+function deletePrevious() {
+    if (secondNum == '') {
+        if (operator == '') {
+            firstNum = firstNum.slice(0,-1);
+        } else operator = '';
+    } else secondNum = secondNum.slice(0,-1);
+    screen.textContent = `${firstNum} ${operator} ${secondNum}`
 }
 
 digits.forEach(button => {
@@ -102,6 +111,7 @@ document.addEventListener("keydown", (event) => {
     if (key >= 0 && key <= 9 || key == '.') printDigit(key);
     if (key == '+' || key == '-' || key == '*') printOperator(key);
     if (key == '/') printOperator('\u00F7');
-    if (key == 'Enter' || key == '=') printOperator('=');
-    if (key == 'Delete' || key == 'Backspace') printOperator('clear');
+    if (key == 'Enter' || key == '=') printOperator('');
+    if (key == 'Delete' || key == 'Escape') printOperator('clear');
+    if (key == 'Backspace') deletePrevious();
 })
