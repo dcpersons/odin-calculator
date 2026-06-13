@@ -18,7 +18,7 @@ function printDigit(digit) {
     else {
     (digit == '.' && secondNum.includes('.'))  ? null :
     secondNum += digit
-    screen.textContent = `${firstNum} ${operator} ${secondNum}`
+    screen.textContent = `${firstNum}${operator}${secondNum}`
     }
 }
 
@@ -33,18 +33,20 @@ function printOperator(sign) {
     // if = is clicked, operate and set result. set first and second num to '' and operator to =
     else if (sign == '') {
         if (firstNum === '') firstNum = result;
-        if (secondNum === '') result = operate(firstNum, secondNum, "")
-        result = operate(firstNum, secondNum, operator);
-        firstNum = '';
-        secondNum = '';
-        operator = '';
+        if (secondNum === '') operator = '', screen.textContent = `${firstNum}${operator}${secondNum}`
+        else {
+            result = operate(firstNum, secondNum, operator);
+            firstNum = '';
+            secondNum = '';
+            operator = '';
+        }
     }
 
     // if a sign is clicked with no second number, set operator variable
     else if (secondNum === '') {
         if (firstNum === '') firstNum = result;
         if (firstNum === '' && sign !== '-') null;
-        else operator = sign, screen.textContent = `${firstNum} ${operator}`;
+        else operator = sign, screen.textContent = `${firstNum}${operator}`;
     } 
 
     // if a sign is clicked with a second number, operate and set firstnum to result
@@ -53,10 +55,10 @@ function printOperator(sign) {
         firstNum = result;
         secondNum = '';
         operator = sign;
-        screen.textContent = `${firstNum} ${operator}`;
+        screen.textContent = `${firstNum}${operator}`;
     }
     
-    else operator = sign, screen.textContent = `${firstNum} ${operator}`;
+    else operator = sign, screen.textContent = `${firstNum}${operator}`;
 }
 
 
@@ -88,7 +90,7 @@ function deletePrevious() {
             firstNum = firstNum.slice(0,-1);
         } else operator = '';
     } else secondNum = secondNum.slice(0,-1);
-    screen.textContent = `${firstNum} ${operator} ${secondNum}`
+    screen.textContent = `${firstNum}${operator}${secondNum}`
 }
 
 digits.forEach(button => {
@@ -102,7 +104,7 @@ digits.forEach(button => {
 operators.forEach(button => {
     button.addEventListener("click", (event) => {
         const clicked = (event.srcElement.className);
-        printOperator(clicked);
+        (clicked == '=') ? printOperator('') : printOperator(clicked);
     })
 })
 
@@ -112,6 +114,6 @@ document.addEventListener("keydown", (event) => {
     if (key == '+' || key == '-' || key == '*') printOperator(key);
     if (key == '/') printOperator('\u00F7');
     if (key == 'Enter' || key == '=') printOperator('');
-    if (key == 'Delete' || key == 'Escape') printOperator('clear');
-    if (key == 'Backspace') deletePrevious();
+    if (key == 'Delete' || key == 'Escape' || key == 'Backspace' && event.ctrlKey == true) printOperator('clear');
+    if (key == 'Backspace' && event.ctrlKey != true) deletePrevious();
 })
